@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Vue.js Web Title</title>
+</head>
+<body>
+<div id="app">
+    <h1>{{ title }}</h1>
+    <div>
+        <h2>Product</h2>
+        <ul>
+            <li v-for="product in products">
+                {{ product.title }} ($ {{ product.price }}) - Inventory {{ product.inventory }}
+            </li>
+        </ul>
+    </div>
+    <div>
+        <h2>Cart</h2>
+        <ul>
+            <li>
+            </li>
+        </ul>
+        <h3>Total Amount : </h3>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script type="application/javascript" language="JavaScript">
+    new Vue({
+        el: '#app',
+        data: {
+            title: 'Vue.js Test(mapping)',
+            products: [
+                {id:1, title:'iPad Mini', price:500.5, inventory:7},
+                {id:2, title:'iPad Pro', price:800.4, inventory:5},
+                {id:3, title:'MacBook', price:1200.6, inventory:2}
+            ]
+        }
+
+    });
+</script>
+</body>
+</html>
