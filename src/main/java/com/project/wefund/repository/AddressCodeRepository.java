@@ -11,12 +11,8 @@ import java.util.List;
 
 @Repository
 public interface AddressCodeRepository extends JpaRepository<AddressCode, String> {
-
-//    List<AddressCode> findAll();
-
-
-    @Query("select a.totalCode from AddressCode a")
-    List<String> getTotalCode();
+//    @Query("select a.totalCode from AddressCode a")
+//    List<String> getTotalCode();
 
     List<AddressCode> findAllByCodeSavePoint(Boolean codeSavePoint);
 

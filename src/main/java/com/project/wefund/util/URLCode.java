@@ -10,7 +10,6 @@ import com.google.gson.GsonBuilder;
 import com.project.wefund.repository.AddressCodeRepository;
 import com.project.wefund.repository.ApiAddressRepository;
 import com.project.wefund.vo.ApiAddress;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -38,13 +37,15 @@ public class URLCode {
 
     private final AddressCodeRepository addressCodeRepository;
 
+    // Trash Code
 //    @Autowired
 //    UrlCode(ApiAddressRepository apiAddressRepository){
 //        this.
 //    }
+    //Trash Code
 
     @SneakyThrows
-    public Object[] postURLData(String addressData) {   // Post로 전달받은 Data에서 url Code 획득
+    public Object[] postURLData(String addressData) {   // Post로 전달받은 Data에서 url Code 가져오는 Method
         ObjectMapper mapper = new ObjectMapper();
 
         HashMap<String, String> map;
@@ -61,21 +62,18 @@ public class URLCode {
     }
 
     @SneakyThrows
-    public Object[] defaultURLDataForSaveAllData(String testCode, Long numOfRows) {
-        String sigunguCd = testCode.substring(0, 5);
+    public Object[] defaultURLDataForSaveAllData(String testCode, Long numOfRows) { // 전체 건축물대장 표제부를 조회하기 위해 필요한 url Code return Method
+        String sigunguCd = testCode.substring(0, 5);    // test
         String bjdongCd  = testCode.substring(5);
         String platGbCd  = "";                  // null값으로 전체값 조회
         String bun       = "";                  // null값으로 전체값 조회
         String ji        = "";                  // null값으로 전체값 조회
-//        numOfRows        = 0L;               // 100 일단 default
         Long pageNo      = 1L;
-            //
-            //  건축물대장 표제부 조회
-            //
+
         return new Object[] {sigunguCd, bjdongCd, platGbCd, bun, ji, numOfRows, pageNo};
     }
 
-    public String makeURL(Object[] urlData) {   // url 만들어주는 Method
+    public String makeURL(Object[] urlData) {   // 전달받은 url Code를 주입해 url 만들어주는 Method
         String urlstr = "";
         try{
             urlstr = "http://apis.data.go.kr/1613000/BldRgstService_v2/" +
@@ -88,7 +86,7 @@ public class URLCode {
                     "&bun="         + urlData[3] +              //      번 0012
                     "&ji="          + urlData[4] +              //      지 0000
                     "&numOfRows="   + urlData[5] +              //      페이지당 목록 수 10
-                    "&pageNo="      + urlData[6] +                 //      페이지번호 1
+                    "&pageNo="      + urlData[6] +              //      페이지번호 1
                     "&_type=json";
         } catch(Exception e){
             e.printStackTrace();
@@ -98,8 +96,7 @@ public class URLCode {
     }
 
     @SneakyThrows
-    // url 호출로 받은 데이터 전처리 Method
-    public JSONObject preprocessingData(String urlstr) {
+    public JSONObject preprocessingData(String urlstr) {        // url 호출로 건축물 표제부 Data를 받아서 전처리하는 Method
         StringBuffer result = new StringBuffer();
         URL url = new URL(urlstr);
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -122,10 +119,10 @@ public class URLCode {
     }
 
     @SneakyThrows
-    public String printAddressData(JSONObject result, String sigunguCd, String bjdongCd) {
+    public String printAddressData(JSONObject result, String sigunguCd, String bjdongCd) {  // Logic에 맞게 Data 전체 추출 후, 저장
         JSONObject parse_items = (JSONObject) result.get("items");
-        Long numOfRows         = (Long) result.get("numOfRows");  
-        Long pageNo            = (Long) result.get("pageNo");     
+        Long numOfRows         = (Long) result.get("numOfRows");
+        Long pageNo            = (Long) result.get("pageNo");
         Long totalCnt          = (Long) result.get("totalCount");
 
 //        Iterable<ApiAddress> test = apiAddressRepository.findAll();
@@ -168,7 +165,9 @@ public class URLCode {
         return sigunguCd;
     }
 
-    public Long checkTotalCount(String testCode) {
+
+
+    public Long checkTotalCount(String testCode) {  // 먼저 url api 호출 후에 Data 전체 개수(=totalCnt)를 찾는 Method
         String url = makeURL(defaultURLDataForSaveAllData(testCode, 100L));
         JSONObject result = preprocessingData(url);
 
@@ -176,6 +175,10 @@ public class URLCode {
         return totalCnt;
     }
 
+
+    //
+    // Url 받아오는 방식 RestTemplate로 진행중
+    //
 //    public void restTemplate(String urlstr, Class<?> addressData) {
 //        HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
 //        factory.setReadTimeout(5000); // 읽기시간초과, ms
